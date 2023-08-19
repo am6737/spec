@@ -3,8 +3,8 @@ syntax = "proto3";
 package staticvolume;
 
 import "github.com/container-storage-interface/spec/lib/go/csi/csi.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "google/protobuf/descriptor.proto";
-import "google/protobuf/any.proto";
 
 option go_package = ".;staticvolume";
 
@@ -19,30 +19,28 @@ message PV {
   string volume_handle = 3;
   CapacityRange capacity_range = 4;
   map<string, string> volume_attributes = 5;
-  repeated csi.v1.VolumeCapability.AccessMode access_mode = 6;
-  google.protobuf.Any reclaim_policy = 7;
+  repeated string access_mode = 6;
+  string reclaim_policy = 7;
 }
 
 message PVC {
   string name = 1;
   string namespace = 2;
   CapacityRange capacity_range = 3;
-  repeated csi.v1.VolumeCapability.AccessMode access_mode = 4;
+  repeated string access_mode = 4 [(gogoproto.nullable) = false];
   bool read_only = 5;
 }
 
 message SC {
   string name = 1;
-  string namespace = 2;
-  string driver_name = 3;
-  string cluster_id = 4;
-  map<string, string> parameters = 5;
-  map<string, string> secret = 6;
+  string provisioner = 2;
+  string cluster_id = 3;
+  map<string, string> parameters = 4;
 }
 
 message CreateVolumeRequest {
   string name = 1;
-  CapacityRange capacity_range = 2;
+  CapacityRange capacity_range = 2 [(gogoproto.nullable) = false];
   map<string, string> parameters = 3;
   map<string, string> secrets = 4;
   PV pv = 5;
