@@ -17,17 +17,18 @@ message PV {
   string name = 1;
   string namespace = 2;
   string volume_handle = 3;
-  string capacity = 4;
+  CapacityRange capacity_range = 4;
   map<string, string> volume_attributes = 5;
-  repeated google.protobuf.Any access_mode = 6;
+  csi.v1.VolumeCapability.AccessMode access_mode = 6;
   google.protobuf.Any reclaim_policy = 7;
 }
 
 message PVC {
   string name = 1;
   string namespace = 2;
-  repeated google.protobuf.Any access_mode = 3;
-  bool read_only = 4;
+  CapacityRange capacity_range = 3;
+  csi.v1.VolumeCapability.AccessMode access_mode = 4;
+  bool read_only = 5;
 }
 
 message SC {
@@ -41,7 +42,7 @@ message SC {
 
 message CreateVolumeRequest {
   string name = 1;
-  google.protobuf.Any capacity_range = 2;
+  CapacityRange capacity_range = 2;
   map<string, string> parameters = 3;
   map<string, string> secrets = 4;
   PV pv = 5;
