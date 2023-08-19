@@ -19,7 +19,7 @@ message PV {
   string volume_handle = 3;
   CapacityRange capacity_range = 4;
   map<string, string> volume_attributes = 5;
-  csi.v1.VolumeCapability.AccessMode access_mode = 6;
+  repeated csi.v1.VolumeCapability.AccessMode access_mode = 6;
   google.protobuf.Any reclaim_policy = 7;
 }
 
@@ -27,7 +27,7 @@ message PVC {
   string name = 1;
   string namespace = 2;
   CapacityRange capacity_range = 3;
-  csi.v1.VolumeCapability.AccessMode access_mode = 4;
+  repeated csi.v1.VolumeCapability.AccessMode access_mode = 4;
   bool read_only = 5;
 }
 
