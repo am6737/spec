@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package staticvolume;
+
+import "github.com/container-storage-interface/spec/lib/go/csi/csi.proto";
+import "google/protobuf/descriptor.proto";
+
+option go_package = ".;staticvolume";
+
+service Controller {
+  rpc CreateVolume(CreateVolumeRequest) returns (CreateVolumeResponse);
+  rpc DeleteVolume(DeleteVolumeRequest) returns (DeleteVolumeResponse);
+}
+
+message CreateVolumeRequest {
+  string name = 1;
+  // This field is OPTIONAL. This allows the CO to specify the capacity
+  // requirement of the volume to be provisioned. If not specified, the
+  // Plugin MAY choose an implementation-defined capacity range. If
+  // specified it MUST always be honored, even when creating volumes
+  // from a source; which MAY force some backends to internally extend
+  // the volume after creating it.
+  CapacityRange capacity_range = 2;
+  // The identifier for the replication.
+  // Plugin specific parameters passed in as opaque key-value pairs.
+  map<string, string> parameters = 3;
+  // Secrets required by the plugin to complete the request.
+  map<string, string> secrets = 4 [(csi.v1.csi_secret) = true];
+}
+
+message CreateVolumeResponse {
+  string volume_id = 1;
+}
+
+message DeleteVolumeRequest {
+  // The ID of the volume to be deprovisioned.
+  // This field is REQUIRED.
+  string volume_id = 1;
+
+  // Secrets required by plugin to complete volume deletion request.
+  // This field is OPTIONAL. Refer to the `Secrets Requirements`
+  // section on how to use this field.
+  map<string, string> secrets = 2 [(csi.v1.csi_secret) = true];
+}
+
+message DeleteVolumeResponse {
+  // Intentionally empty.
+}
+
+// The capacity of the storage space in bytes. To specify an exact size,
+// `required_bytes` and `limit_bytes` SHALL be set to the same value. At
+// least one of the these fields MUST be specified.
+message CapacityRange {
+  // Volume MUST be at least this big. This field is OPTIONAL.
+  // A value of 0 is equal to an unspecified field value.
+  // The value of this field MUST NOT be negative.
+  int64 required_bytes = 1;
+
+  // Volume MUST not be bigger than this. This field is OPTIONAL.
+  // A value of 0 is equal to an unspecified field value.
+  // The value of this field MUST NOT be negative.
+  int64 limit_bytes = 2;
+}
