@@ -3,7 +3,7 @@ syntax = "proto3";
 package staticvolume;
 
 import "github.com/container-storage-interface/spec/lib/go/csi/csi.proto";
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+//import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "google/protobuf/descriptor.proto";
 
 option go_package = ".;staticvolume";
@@ -17,7 +17,7 @@ message PV {
   string name = 1;
   string namespace = 2;
   string volume_handle = 3;
-  CapacityRange capacity_range = 4;
+  string capacity = 4;
   map<string, string> volume_attributes = 5;
   repeated string access_mode = 6;
   string reclaim_policy = 7;
@@ -26,8 +26,8 @@ message PV {
 message PVC {
   string name = 1;
   string namespace = 2;
-  CapacityRange capacity_range = 3;
-  repeated string access_mode = 4 [(gogoproto.nullable) = false];
+  string capacity = 3;
+  repeated string access_mode = 4;
   bool read_only = 5;
 }
 
@@ -40,7 +40,7 @@ message SC {
 
 message CreateVolumeRequest {
   string name = 1;
-  CapacityRange capacity_range = 2 [(gogoproto.nullable) = false];
+  string capacity = 2;
   map<string, string> parameters = 3;
   map<string, string> secrets = 4;
   PV pv = 5;
@@ -65,19 +65,4 @@ message DeleteVolumeRequest {
 
 message DeleteVolumeResponse {
   // Intentionally empty.
-}
-
-// The capacity of the storage space in bytes. To specify an exact size,
-// `required_bytes` and `limit_bytes` SHALL be set to the same value. At
-// least one of the these fields MUST be specified.
-message CapacityRange {
-  // Volume MUST be at least this big. This field is OPTIONAL.
-  // A value of 0 is equal to an unspecified field value.
-  // The value of this field MUST NOT be negative.
-  int64 required_bytes = 1;
-
-  // Volume MUST not be bigger than this. This field is OPTIONAL.
-  // A value of 0 is equal to an unspecified field value.
-  // The value of this field MUST NOT be negative.
-  int64 limit_bytes = 2;
 }
