@@ -18,17 +18,20 @@ message PV {
   string namespace = 2;
   string volume_handle = 3;
   string capacity = 4;
-  map<string, string> volume_attributes = 5;
-  repeated string access_mode = 6;
-  string reclaim_policy = 7;
+  string storage_class_name = 5;
+  map<string, string> volume_attributes = 6;
+  repeated string access_mode = 7;
+  string reclaim_policy = 8;
 }
 
 message PVC {
   string name = 1;
   string namespace = 2;
   string capacity = 3;
-  repeated string access_mode = 4;
-  bool read_only = 5;
+  string storage_class_name = 4;
+  repeated string access_mode = 5;
+  bool read_only = 6;
+
 }
 
 message SC {
